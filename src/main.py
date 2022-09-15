@@ -1,18 +1,42 @@
-# This code requires Python 3 and tkinter (which is usually installed by default)
+﻿# This code requires Python 3 and tkinter (which is usually installed by default)
 # This code will NOT work on trinket.io as the tkinter module is not supported
 # Raspberry Pi Foundation 2020
 # CC-BY-SA 4.0
-
+import math
 try:
-    from tkinter import Tk, Canvas, BOTH
+    from tkinter import  Tk, Canvas, BOTH
 except ImportError:
     raise Exception("tkinter did not import successfully - check you are running Python 3 and that tkinter is available.")
-
+from tkinter import *
 import random
+from datetime import datetime
+
+
+
+global KM_PH 
+print('Enter speed (0 - 160):')
+KM_PH = input()
+#KM_PH = 175
+
+global RP_M
+print('Enter RPM (0 - 8):')
+RP_M = input()
+#RP_M = 4.5
+
+global OutTemp
+print('Enter Temp (0 - 50):')
+OutTemp = input()
+#OutTemp = 23.5
+
+global Rangekm
+print('Enter Range in km (0 - 500):')
+Rangekm = input()     #MAX FUEL 500km
+#Rangekm = 400
 
 
 class Paper():
     
+
     # the tk object which will be used by the shapes
     tk = None
 
@@ -39,7 +63,7 @@ class Paper():
             raise Exception("Error: could not instantiate tkinter object")
 
         # Set some attributes
-        Paper.tk.title("Drawing shapes")
+        Paper.tk.title("Dashboard")
         Paper.tk.geometry(str(width)+"x"+str(height))
         Paper.tk.paper_width = width
         Paper.tk.paper_height = height
@@ -52,6 +76,12 @@ class Paper():
         """
         Displays the paper
         """
+
+
+    
+    
+
+
         Paper.tk.mainloop()
 
 class Shape():
@@ -330,25 +360,93 @@ if __name__ == "__main__":
     #WHITE LINE MIDDLE UPPER INBETWEEN TWO RINGS
     rect1 = Rectangle(height=1.5, width=400, x=370, y=100, color="white")
     rect1.draw()
+    
+
+    def outline_right_arrow():
+        #### Turning arrow whie outline RIGHT
+        rect2 = Rectangle(height=22, width=23, x=802, y=58.5, color="white")
+        rect2.draw()
+        tri = Triangle(x1=855, y1=70, x2= 822, y2 = 49, x3 = 822, y3 =92, color = 'white')
+        tri.draw()
+    ##BLACK FILL
+        rect2 = Rectangle(height=15, width=20, x=805, y=62, color="black")
+        rect2.draw()
+        tri = Triangle(x1=850, y1=70, x2= 825, y2 = 55, x3 = 825, y3 =85, color = 'black')
+        tri.draw()
 
 
-    ###Turning arrow RIGHT
-    rect2 = Rectangle(height=15, width=20, x=805, y=62, color="green2")
-    rect2.draw()
-    tri = Triangle(x1=850, y1=70, x2= 825, y2 = 55, x3 = 825, y3 =85, color = 'green2')
-    tri.draw()
+    
 
-    ##Tunring arrow LEFT
-    rect3 = Rectangle(height=15, width=20, x=339, y=62, color="green2")
-    rect3.draw()
-    tri2 = Triangle(x1=315, y1=70, x2= 340, y2 = 55, x3 = 340, y3 =85, color = 'green2')
-    tri2.draw()
+   ###  TURNING RIGHT ARROW 
+
+    def right_arrow():
+        rect2 = Rectangle(height=15, width=20, x=805, y=62, color="green2")
+        rect2.draw()
+        tri = Triangle(x1=850, y1=70, x2= 825, y2 = 55, x3 = 825, y3 =85, color = 'green2')
+        tri.draw()
+
+    
+         
+    
+    def outline_left_arrow():
+        ##Tunring arrow white outline   LEFT
+        rect3 = Rectangle(height=22, width=23, x=340, y=58.5, color="white")
+        rect3.draw()
+        tri2 = Triangle(x1=310, y1=70, x2= 343, y2 = 49, x3 = 343, y3 =92, color = 'white')
+        tri2.draw()
+        ##black outline
+        rect3 = Rectangle(height=15, width=20, x=339, y=62, color="black")
+        rect3.draw()
+        tri2 = Triangle(x1=315, y1=70, x2= 340, y2 = 55, x3 = 340, y3 =85, color = 'black')
+        tri2.draw()
+
    
+
+    def left_arrow():
+        ##Tunring arrow LEFT
+        rect3 = Rectangle(height=15, width=20, x=339, y=62, color="green2")
+        rect3.draw()
+        tri2 = Triangle(x1=315, y1=70, x2= 340, y2 = 55, x3 = 340, y3 =85, color = 'green2')
+        tri2.draw()
+    
+    #left_arrow()
+    #right_arrow()
+         ### conditional statement RIGHT ARROW
+    def motion(event):
+        x, y = event.x, event.y
+        print('{}, {}'.format(x, y))
+
+        ### RIGHT ARROW CONDITION
+        if  (806 < x < 846)  & (62 < y < 77):
+            right_arrow()
+
+        else:
+            outline_right_arrow()
+
+        ### LEFT ARROW CONDITION
+        if (316 < x < 358) & (65 < y < 77):
+            left_arrow()
+        else:
+            outline_left_arrow()
+
+        
+             
+    Paper.tk.bind('<Motion>', motion)
+
    # RPM right ring
+   #Right ring shade
+    oval = Oval()
+    oval.set_height(310)
+    oval.set_width(310)
+    oval.set_color("light blue")
+    oval.set_x(795)
+    oval.set_y(41.5)
+    oval.draw()
+   #right ring base
     oval = Oval()
     oval.set_height(300)
     oval.set_width(300)
-    oval.set_color("orange red")
+    oval.set_color("cyan2")
     oval.set_x(800)
     oval.set_y(50)
     oval.draw()
@@ -356,7 +454,7 @@ if __name__ == "__main__":
     oval4 = Oval()
     oval4.set_height(285)
     oval4.set_width(285)
-    oval4.set_color("grey10")
+    oval4.set_color("dark slate gray")
     oval4.set_x(807.5)
     oval4.set_y(57.5)
     oval4.draw()
@@ -364,7 +462,7 @@ if __name__ == "__main__":
     oval5 = Oval()
     oval5.set_height(165)
     oval5.set_width(165)
-    oval5.set_color("orange red")
+    oval5.set_color("grey20")
     oval5.set_x(865)
     oval5.set_y(120)
     oval5.draw()
@@ -372,14 +470,24 @@ if __name__ == "__main__":
     oval6 = Oval()
     oval6.set_height(150)
     oval6.set_width(150)
-    oval6.set_color("grey9")
+    oval6.set_color("grey10")
     oval6.set_x(872)
     oval6.set_y(127.5)
     oval6.draw()
     ###END OF RIGHT RING
 
 
+
     # KM/H left ring
+    #Right ring shade
+    oval = Oval()
+    oval.set_height(310)
+    oval.set_width(310)
+    oval.set_color("light salmon")
+    oval.set_x(45)
+    oval.set_y(41.5)
+    oval.draw()
+    #base left ring
     oval2 = Oval()
     oval2.set_height(300)
     oval2.set_width(300)
@@ -416,15 +524,26 @@ if __name__ == "__main__":
 
     ##KM/H numbers
     
-    Numb1 = Paper.tk.canvas.create_text(110,275,fill='white',font='Robinson 22 bold', text='0')
-    Numb2 = Paper.tk.canvas.create_text(90,225,fill='white',font='Robinson 22 bold', text='20')
-    Numb3 = Paper.tk.canvas.create_text(95,160,fill='white',font='Robinson 22 bold', text='40')
-    Numb4 = Paper.tk.canvas.create_text(130,105,fill='white',font='Robinson 22 bold', text='60')
-    Numb5 = Paper.tk.canvas.create_text(200,85,fill='white',font='Robinson 22 bold', text='80')
-    Numb6 = Paper.tk.canvas.create_text(260,105,fill='white',font='Robinson 22 bold', text='100')
-    Numb7 = Paper.tk.canvas.create_text(300,160,fill='white',font='Robinson 22 bold', text='120')
-    Numb8 = Paper.tk.canvas.create_text(310,225,fill='white',font='Robinson 22 bold', text='140')
-    Numb9 = Paper.tk.canvas.create_text(280,275,fill='white',font='Robinson 22 bold', text='160')
+    Numb1 = Paper.tk.canvas.create_text(115,275,fill='OliveDrab1',font='Robinson 22 bold', text='0')
+    Numb2 = Paper.tk.canvas.create_text(90,225,fill='OliveDrab1',font='Robinson 22 bold', text='20')
+    Numb3 = Paper.tk.canvas.create_text(95,160,fill='OliveDrab1',font='Robinson 22 bold', text='40')
+    Numb4 = Paper.tk.canvas.create_text(130,105,fill='OliveDrab1',font='Robinson 22 bold', text='60')
+    Numb5 = Paper.tk.canvas.create_text(195,85,fill='OliveDrab1',font='Robinson 22 bold', text='80')
+    Numb6 = Paper.tk.canvas.create_text(265.5,108,fill='OliveDrab1',font='Robinson 22 bold', text='100')
+    Numb7 = Paper.tk.canvas.create_text(300,160,fill='OliveDrab1',font='Robinson 22 bold', text='120')
+    Numb8 = Paper.tk.canvas.create_text(310,225,fill='OliveDrab1',font='Robinson 22 bold', text='140')
+    Numb9 = Paper.tk.canvas.create_text(280,275,fill='OliveDrab1',font='Robinson 22 bold', text='160')
+
+    ## RPM NUMBERS
+    RPM1 = Paper.tk.canvas.create_text(865,275,fill='OliveDrab1',font='Robinson 22 bold', text='0')
+    RPM2 = Paper.tk.canvas.create_text(840,225,fill='OliveDrab1',font='Robinson 22 bold', text='1')
+    RPM3 = Paper.tk.canvas.create_text(845,160,fill='OliveDrab1',font='Robinson 22 bold', text='2')
+    RPM4 = Paper.tk.canvas.create_text(885,105,fill='OliveDrab1',font='Robinson 22 bold', text='3')
+    RPM5 = Paper.tk.canvas.create_text(950,85,fill='OliveDrab1',font='Robinson 22 bold', text='4')
+    RPM6 = Paper.tk.canvas.create_text(1020,105,fill='OliveDrab1',font='Robinson 22 bold', text='5')
+    RPM7 = Paper.tk.canvas.create_text(1060,160,fill='OliveDrab1',font='Robinson 22 bold', text='6')
+    RPM8 = Paper.tk.canvas.create_text(1055,225,fill='OliveDrab1',font='Robinson 22 bold', text='7')
+    RPM9 = Paper.tk.canvas.create_text(1030,275,fill='OliveDrab1',font='Robinson 22 bold', text='8')
 
       ### WHITE LINE BOTTOM between 2 rings
     rect1 = Rectangle(height=1.5, width=430, x=365, y=320, color="white")
@@ -436,33 +555,164 @@ if __name__ == "__main__":
     tri.draw()
     tri = Triangle(x1=410, y1=320, x2= 538, y2 = 180, x3 = 410.5, y3 =320, color = 'orange red')
     tri.draw()
-    ##middle stripe
-    tri = Triangle(x1=525, y1=320, x2= 600, y2 = 200, x3 = 525.5, y3 =320, color = 'red')
+    tri = Triangle(x1=425, y1=320, x2= 515, y2 = 220, x3 = 425.5, y3 =320, color = 'red')
     tri.draw()
-    ###Right streak details
-    tri = Triangle(x1=700, y1=320, x2= 600, y2 = 180, x3 = 699, y3 =320, color = 'orange red')
-    tri.draw()
-    tri = Triangle(x1=720, y1=320, x2= 620, y2 = 200, x3 = 720.5, y3 =320, color = 'orange red')
-    tri.draw()
-    tri = Triangle(x1=793, y1=320, x2= 680, y2 = 185, x3 = 793.5, y3 =320, color = 'red')
-    tri.draw()
+    #tri = Triangle(x1=440, y1=320, x2= 535, y2 = 220, x3 = 440.5, y3 =320, color = 'red')
+  #  tri.draw()
+    ## road dotted line
+    #rect3 = Rectangle(height=30, width=8, x=600, y=280, color="grey70")
+    #rect3.draw()
+    #rect3 = Rectangle(height=25, width=6, x=600, y=230, color="grey60")
+   # rect3.draw()
+   # tri = Triangle(x1=600, y1=210, x2= 607, y2 = 210, x3 = 603.5, y3 =195, color = 'grey50')
+   # tri.draw()
 
+
+    ###Right streak details
+    #rect1 = Rectangle(height=120, width=120, x=575, y=200, color="turquoise3")
+    #rect1.draw()
+    tri = Triangle(x1=700, y1=320, x2= 600, y2 = 180, x3 = 699, y3 =320, color = 'turquoise1')
+    tri.draw()
+    tri = Triangle(x1=720, y1=320, x2= 630, y2 = 200, x3 = 720.5, y3 =320, color = 'turquoise1')
+    tri.draw()
+    tri = Triangle(x1=770, y1=320, x2= 705, y2 = 240, x3 = 770.5, y3 =320, color = 'turquoise3')
+    tri.draw()
+   # tri = Triangle(x1=695, y1=200, x2= 695, y2 = 320, x3 = 795, y3 = 320, color = 'turquoise3')
+   # tri.draw()
+    #econd=Paper.tk.canvas.create_line(780,320,670,200,fill='white',width=2) # draw the needle
+    tri = Triangle(x1=790, y1=320, x2= 675, y2 = 180, x3 = 790.5, y3 =320, color = 'turquoise3')
+    tri.draw()
 
     ### KMH DIGITAL
-    KMH = Paper.tk.canvas.create_text(640,230,fill='grey',font='Robinson 16', text='KMH')
-    KMH = Paper.tk.canvas.create_text(570,220,fill='white',font='Robinson 40 bold', text='153')
+    KMH = Paper.tk.canvas.create_text(645,195,fill='OliveDrab1',font='Robinson 16', text='KMH')
+    KM_PHstr = str(KM_PH)
+    KMH = Paper.tk.canvas.create_text(570,180,fill='OliveDrab1',font='Robinson 44 bold', text= KM_PHstr)
+
+    ### RPM DIGITAL Right ring
+    RPMDIG = KMH = Paper.tk.canvas.create_text(950,250,fill='OliveDrab1',font='Robinson 12', text='x1000/min')
 
     ### SPORT LOGO
-    Sport = Paper.tk.canvas.create_text(890,365,fill='red',font='Robinson 16 bold', text='SPORT')
+    Sport = Paper.tk.canvas.create_text(885,365,fill='red',font='Robinson 16 bold', text='SPORT')
 
 ### Gear of car (Drive example)
     Gear = Paper.tk.canvas.create_text(385,80,fill='white',font='Robinson 30 bold', text='D')
 
-    ## RANGE
-    Range = Paper.tk.canvas.create_text(130,365,fill='white',font='Robinson 12 ', text='Range    300 km')
+    ## RANGE JUICE GREEN SLAB
+    Rangekm = str(Rangekm)
+    Rangekm = int(Rangekm)
+    Range = Paper.tk.canvas.create_text(580,340,fill='white',font='Robinson 12 bold ', text='Range           km')
+    Range = Paper.tk.canvas.create_text(595,340,fill='white',font='Robinson 12 bold', text= Rangekm)
+    ##circular round off
+    oval12 = Oval()
+    oval12.set_height(25)
+    oval12.set_width(25)
+    oval12.set_color("lawn green")
+    oval12.set_x(362.5)
+    oval12.set_y(355)
+    oval12.draw()
+    rect3 = Rectangle(height=25, width=10, x=380, y=355, color="black")
+    rect3.draw()
+    ##long green box
+    rect3 = Rectangle(height=25, width=400*(Rangekm/500), x=380, y=355, color="lawn green")
+    rect3.draw()
+    ## reserve fuel
+    rect3 = Rectangle(height=25, width=3, x=378, y=355, color="black")
+    rect3.draw()
+    #LOW PETROL
+    rect3 = Rectangle(height=25, width=3, x=480, y=355, color="black")
+    rect3.draw()
+    #MEIDUM
+    rect3 = Rectangle(height=25, width=3, x=580, y=355, color="black")
+    rect3.draw()
+    #HIGH
+    rect3 = Rectangle(height=25, width=3, x=680, y=355, color="black")
+    rect3.draw()
+    if (Rangekm < 25) :
+         Reserve_warning = Paper.tk.canvas.create_text(450,367.5,fill='red',font='Robinson 12 bold ', text='Reserve Fuel')
+    
+  ## End of Range module
+
+
+
 
     ##KMH in left ring
-    KMHLR = Paper.tk.canvas.create_text(200,250,fill='grey',font='Robinson 16 ', text='KMH')
+    KMHLR = Paper.tk.canvas.create_text(200,260,fill='OliveDrab1',font='Robinson 16 ', text='KMH')
 
+    
+    ### Temperature outside
+    OutTemp = str(OutTemp)
+    Temp = Paper.tk.canvas.create_text(575,80,fill='white',font='Robinson 16 bold', text=OutTemp)
+    Temp = Paper.tk.canvas.create_text(615,80,fill='white',font='Robinson 16 bold', text = "c")
+    ## celcius symbol
+    oval9 = Oval()
+    oval9.set_height(10)
+    oval9.set_width(10)
+    oval9.set_color("white")
+    oval9.set_x(595)
+    oval9.set_y(68)
+    oval9.draw()
+
+    oval10 = Oval()
+    oval10.set_height(4)
+    oval10.set_width(4)
+    oval10.set_color("black")
+    oval10.set_x(598)
+    oval10.set_y(71)
+    oval10.draw()
+    ### END TEMP
+
+
+    ### Real time
+    now = datetime.now()
+
+    current_time = now.strftime("%H:%M")
+    Time = Paper.tk.canvas.create_text(740,80,fill='white',font='Robinson 16 bold', text=current_time)
+    ### END TIME
+
+
+    ### KMH NEEDLE
+    oval11 = Oval()
+    oval11.set_height(30)
+    oval11.set_width(30)
+    oval11.set_color("grey")
+    oval11.set_x(180)
+    oval11.set_y(176.5)
+    oval11.draw()
+    KM_PH = int(KM_PH)
+    Angular_shift = ((KM_PH)-80) * 1.8
+    xbegin = 195
+    ybegin = 191.5
+    in_radian = math.radians(Angular_shift)
+    xend = xbegin + 120*math.sin(in_radian)
+    yend = ybegin - 120*math.cos(in_radian)
+    second=Paper.tk.canvas.create_line(xbegin,ybegin,xend,yend,fill='tomato',width=5) # draw the needle
+    ## END OF LEFT HAND NEEDLE
+
+    ### RPM NEEDLE RIGHT HAND
+    oval12 = Oval()
+    oval12.set_height(30)
+    oval12.set_width(30)
+    oval12.set_color("grey")
+    oval12.set_x(935)
+    oval12.set_y(185)
+    oval12.draw()
+    RP_M = float(RP_M)
+    Angular_shift2 = ((RP_M)-4) * 36
+    xbegin2 = 950
+    ybegin2 = 200
+    in_radian2 = math.radians(Angular_shift2)
+    xend2 = xbegin2 + 120*math.sin(in_radian2)
+    yend2 = ybegin2 - 120*math.cos(in_radian2)
+    second=Paper.tk.canvas.create_line(xbegin2,ybegin2,xend2,yend2,fill='firebrick1',width=5) # draw the needle
+
+
+
+    
+
+
+    
   
+
     my_drawing.display()
+
+
