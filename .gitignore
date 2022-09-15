@@ -35,7 +35,7 @@
 *.app
 
 # folders
-__pycache__/
+__pycache__/*
 
 # python relate
 *.pyc
