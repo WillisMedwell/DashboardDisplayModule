@@ -29,19 +29,24 @@ class TkWindow():
         # Create a tkinter canvas object to draw on
         TkWindow._canvas = tkinter.Canvas(TkWindow._window, bg = 'white')
         TkWindow._canvas.pack(fill=BOTH, expand=YES)
+
     
-    def _clear_frame(self):
+    def clear(self):
         self.get_canvas().delete('all')
     
+    # Draws to screen. Only appears once screen is refreshed.
     def draw(self, shape_list):
-        self._clear_frame()
         for shape in shape_list:
             shape.draw(self)
 
     # Redraws the screen
-    def refresh_screen(self):
-        self.get_canvas().update()
-        self.get_canvas().update_idletasks()
+    def refresh(self):
+        try:
+            self.get_canvas().update()
+            self.get_canvas().update_idletasks()
+        except:
+            print("Quitting...")
+            exit(0)
 
     # Returns true when want to quit
     def quit(self):
@@ -58,3 +63,23 @@ class TkWindow():
 
     def get_canvas(self):
         return TkWindow._canvas
+
+    def get_mouseX(self):
+        x = self._window.winfo_pointerx() - self._window.winfo_rootx()
+        if x <= self._window.winfo_width() and x >= 0:
+            return x
+        else:
+            return None
+
+    def get_mouseY(self):
+        y = self._window.winfo_pointery() - self._window.winfo_rooty()
+        if y <= self._window.winfo_height() and y >= 0:
+            return y
+        else:
+            return None
+    
+    def get_mouseXY(self):
+        if self.get_mouseX() == None or self.get_mouseY() == None:
+            return None
+        else:
+            return self.get_mouseX(), self.get_mouseY()

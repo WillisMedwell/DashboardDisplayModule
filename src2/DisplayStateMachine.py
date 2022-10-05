@@ -34,7 +34,7 @@ class DisplayStateMachine():
 
     def _default_contents(self):
         return [
-            Image(0,   0, directory = "../images/test.png"), 
+            #Image(0,   0, directory = "../images/test.png"), 
             Image(400, 0, directory = "../images/test.gif"),
             Rectangle(50, 50, 0, 0),
             Triangle(100, 0, 100, 50, 150, 25),
