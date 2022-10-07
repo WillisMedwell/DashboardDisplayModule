@@ -21,19 +21,19 @@ Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](1030
 In progress...
 - 1.03 Pygame Demo\
 After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.\
-|                | Tkinter | Pygame |
-|----------------|---------|--------|
-| Time (ms)      |  3.536  | 1.053  |
-| Freq (Hz / Fps)|  282.8  | 949.7  |
-![Version 1.03 Progress Image](/progress/103.gif)\
+|           | Tkinter | Pygame |
+|-----------|---------|--------|
+| Time (ms) | 3.536   | 1.053  |
+| Freq (Hz) | 282.8   | 949.7  |
+![Version 1.03 Progress Image](/progress/103.gif = 300x)
 
 - 1.02 Tkinter in Realtime\
 Willis improved Daniel's demo by making the mainloop dynamic instead of controlled by Tkinter. Also added gif and png shapes.\
-![Version 1.02 Progress Image](/progress/102.png)\
+![Version 1.02 Progress Image](/progress/102.png = 300x)
 
 - 1.01 Tkinter Demo\
 Daniel created and implemented a working prototype that had a working speedometer, rpm, range and more.\
 
-![Version 1.01 Progress Image](/progress/101.png)
+![Version 1.01 Progress Image](/progress/101.png = 300x)
 - 1.00 Requirements and Project Setup\
 First commit laying out project brief and introducing members to the git/github process\
