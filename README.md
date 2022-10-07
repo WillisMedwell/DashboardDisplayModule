@@ -14,7 +14,7 @@ N/A
 ### Team Members
 Willis Medwell [Personal Email](medwellwillis@gmail.com) ([Student Emaai](102567073@student.swin.edu.au))\
 Daniel Failla [Personal Email](danielfailla4@gmail.com) ([Student Email](103191554@student.swin.edu.au))\
-Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](103072015@student.swin.edu.au))\
+Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](103072015@student.swin.edu.au))
 
 ### Versions
 #### 1.04 OpenCV Camera
