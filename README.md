@@ -17,23 +17,23 @@ Daniel Failla [Personal Email](danielfailla4@gmail.com) ([Student Email](1031915
 Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](103072015@student.swin.edu.au))\
 
 ### Versions
-- 1.04 OpenCV Camera
+#### 1.04 OpenCV Camera
 In progress...
-- 1.03 Pygame Demo\
+#### 1.03 Pygame Demo
 After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.
 |           | Tkinter | Pygame |
 |-----------|---------|--------|
 | Time (ms) | 3.536   | 1.053  |
 | Freq (Hz) | 282.8   | 949.7  |
-<img src="/progress/icon.png" height="300">
+<img src="/progress/103.gif" height="300">
 
-- 1.02 Tkinter in Realtime\
+#### 1.02 Tkinter in Realtime\
 Willis improved Daniel's demo by making the mainloop dynamic instead of controlled by Tkinter. Also added gif and png shapes.\
-![Version 1.02 Progress Image](/progress/102.png = 300x)
+<img src="/progress/102.png" height="300">
 
-- 1.01 Tkinter Demo\
+#### 1.01 Tkinter Demo\
 Daniel created and implemented a working prototype that had a working speedometer, rpm, range and more.\
+<img src="/progress/101.png" height="300">
 
-![Version 1.01 Progress Image](/progress/101.png = 300x)
-- 1.00 Requirements and Project Setup\
+#### 1.00 Requirements and Project Setup\
 First commit laying out project brief and introducing members to the git/github process\
