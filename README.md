@@ -25,15 +25,15 @@ After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter 
 |-----------|---------|--------|
 | Time (ms) | 3.536   | 1.053  |
 | Freq (Hz) | 282.8   | 949.7  |
-<img src="/progress/103.gif" height="300">
+<img src="/progress/103.gif" height="200" width = "600">
 
-#### 1.02 Tkinter in Realtime\
+#### 1.02 Tkinter in Realtime
 Willis improved Daniel's demo by making the mainloop dynamic instead of controlled by Tkinter. Also added gif and png shapes.\
-<img src="/progress/102.png" height="300">
+<img src="/progress/102.png" height="200" width = "600">
 
-#### 1.01 Tkinter Demo\
+#### 1.01 Tkinter Demo
 Daniel created and implemented a working prototype that had a working speedometer, rpm, range and more.\
-<img src="/progress/101.png" height="300">
+<img src="/progress/101.png" height="200" width = "600">
 
-#### 1.00 Requirements and Project Setup\
+#### 1.00 Requirements and Project Setup
 First commit laying out project brief and introducing members to the git/github process\
