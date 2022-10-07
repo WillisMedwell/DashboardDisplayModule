@@ -10,42 +10,67 @@ class DashState(Enum):
     REAR_VIEW = 3
 
 class DisplayStateMachine():
-    _state = None
-    _default_list = None
-    _left_view_list = None
-    _right_view_list = None
-    _rear_view_list = None
-
     def __init__(self):
         self._state = DashState.DEFAULT
-        self._default_list = self._default_contents()
-        self._left_view_list = self._left_view_contents()
-        self._right_view_list = self._right_view_contents()
-        self._right_view_contents = self._rear_view_contents()
+        self._defaultDrawList = self._DefualtContents()
+        self._leftDrawList = self._LeftViewContents()
+        self._rightDrawList = self._RightViewContents()
+        self._rearDrawList = self._RearViewContents()
+        self._leftIndicator = False
+        self._rightIndicator = False
+        self._speed = 0
 
-    def set_state(self ,state):
+
+    def SetState(self, state):
         _state = DashState(state)
 
-    def get_shape_list(self):
+    def GetDrawList(self):
+        output = None;
+
+        # Major layout objects that need to be drawn
         if self._state == DashState.DEFAULT:
-            return self._default_list
+            output = self._defaultDrawList
         else:
             raise Exception("The desired state does not exist (line 33 DisplayManager.py)")
 
-    def _default_contents(self):
+        # Time/Dynamic dependent objects
+        
+
+
+        return output
+
+    def _DefualtContents():
         return [
             Image(0,   0, directory = "../images/test.png"), 
             Image(400, 0, directory = "../images/test.gif"),
+            Image(0, 0, directory = "../images/dash.png"),
             Rectangle(50, 50, 0, 0),
             Triangle(100, 0, 100, 50, 150, 25),
             Oval(50, 50, 175, 0),
         ]
 
-    def _left_view_contents(self):
+    def _LeftViewContents():
         return []
     
-    def _right_view_contents(self):
+    def _RightViewContents():
         return []
 
-    def _rear_view_contents(self):
+    def _RearViewContents():
         return []
+
+    def TurnOnLeftIndicator(self):
+        self._leftIndicator = True;
+        self._rightIndicator = False;
+
+    def TurnOnRightIndicator(self):
+        self._leftIndicator = True;
+        self._rightIndicator = False;
+    
+    def TurnOffIndicators(self):
+        self._leftIndicator = False
+        self._rightIndicator = False
+    
+    def SetSpeed(self, speed):
+        self._speed = speed
+
+    

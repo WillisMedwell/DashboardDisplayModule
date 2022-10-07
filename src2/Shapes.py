@@ -209,15 +209,26 @@ class Triangle(Shape):
 class Image(Shape):
     _directory = None
     _img = None
-    def __init__(self, x=None, y=None, directory =""):
+    def __init__(self, pos, directory =""):
         if directory == "":
             raise Exception("Images need a directory")
         
         self._directory = directory
         self._img = pygame.image.load(directory).convert()
-        self.x = x
-        self.y = y
+        self.x = pos[0]
+        self.y = pos[1]
     
     def draw(self, window):
-        window.GetSurface().blit(self._img, (0,0))
+        window.GetSurface().blit(self._img, (self.x, self.y))
 
+class Line(Shape):
+    def __init__(self, x1, y1, x2, y2, lineThicknes, color = "black"):
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.lineThicknes = lineThicknes
+        super().__init__(color=color)
+
+    def draw(self, window):
+        pygame.draw.line(window.GetSurface(), self.color, (self.x1, self.y1), (self.x2, self.y2), width=self.lineThicknes)
