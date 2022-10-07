@@ -20,12 +20,12 @@ Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](1030
 - 1.04 OpenCV Camera
 In progress...
 - 1.03 Pygame Demo\
-After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.\
+After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.
 |           | Tkinter | Pygame |
 |-----------|---------|--------|
 | Time (ms) | 3.536   | 1.053  |
 | Freq (Hz) | 282.8   | 949.7  |
-![Version 1.03 Progress Image](/progress/103.gif = 300x)
+<img src="/progress/icon.png" height="300">
 
 - 1.02 Tkinter in Realtime\
 Willis improved Daniel's demo by making the mainloop dynamic instead of controlled by Tkinter. Also added gif and png shapes.\
