@@ -29,7 +29,7 @@ def main():
 
         # Clear last frame, draw frame, refresh screen to new frame.
         window.clear()
-        window.draw(display_manager.get_shape_list())
+        window.draw(display_manager.GetDrawList())
         window.refresh()
 
 if __name__ == "__main__":

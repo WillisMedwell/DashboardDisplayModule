@@ -39,23 +39,23 @@ class DisplayStateMachine():
 
         return output
 
-    def _DefualtContents():
+    def _DefualtContents(self):
         return [
-            Image(0,   0, directory = "../images/test.png"), 
-            Image(400, 0, directory = "../images/test.gif"),
-            Image(0, 0, directory = "../images/dash.png"),
+            Image(0,   0, directory = "images/test.png"), 
+            #Image(400, 0, directory = "images/test.gif"),
+            #Image(0, 0, directory = "images/dash.png"),
             Rectangle(50, 50, 0, 0),
             Triangle(100, 0, 100, 50, 150, 25),
             Oval(50, 50, 175, 0),
         ]
 
-    def _LeftViewContents():
+    def _LeftViewContents(self):
         return []
     
-    def _RightViewContents():
+    def _RightViewContents(self):
         return []
 
-    def _RearViewContents():
+    def _RearViewContents(self):
         return []
 
     def TurnOnLeftIndicator(self):
