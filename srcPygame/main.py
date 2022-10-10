@@ -3,13 +3,10 @@ from time import sleep
 from Timer import Timer
 from PygameWindow import PygameWindow
 from CameraThread import CameraThread
-from DisplayStateMachine import DisplayStateMachine
+from DisplayStateMachine import *
 import pygame
 
 def main():
-    InstanceCameraThread = lambda : CameraThread("pc", 0)
-    cameraThread = InstanceCameraThread()
-    cameraThread.start()
     window = PygameWindow(1280, 400, "Car Dash")
     displayManager = DisplayStateMachine()
     time = Timer();
@@ -18,17 +15,12 @@ def main():
     fuel = 0;
     temp = 50;
     rpm = 0;
-    cameraDone = False
-    cameraImg = None
 
     while(window.IsRunning()):
         # Timing collections
-        while(time.GetElapsed().ms() <= 1/60*1000):
-            pass
+        #while(time.GetElapsed().ms() <= 1/60*1000):
+        #    pass
         #     #time.Sleep((1/60)-time.GetElapsed().s())
-
-        if cameraThread.GetPyImage() != None:
-            cameraImg = cameraThread.GetPyImage()            
 
         times.append(time.GetElapsed().ms())
         time.Reset()
@@ -73,16 +65,23 @@ def main():
                 displayManager.TurnOffHandbrakeWarning()
             else:
                 displayManager.TurnOnHandbrakeWarning()
+        elif window.WasKeyTyped(pygame.K_1):
+            displayManager.SetState(DashState.DEFAULT)
+        elif window.WasKeyTyped(pygame.K_2):
+            displayManager.SetState(DashState.REAR_VIEW)
+        elif window.WasKeyTyped(pygame.K_3):
+            displayManager.SetState(DashState.LEFT_VIEW)
+        elif window.WasKeyTyped(pygame.K_4):
+            displayManager.SetState(DashState.RIGHT_VIEW)
 
         # Drawing screen.
+        window.Clear()
         window.ProcessEvents()
         window.Draw(displayManager.GetDrawList())
-        if cameraImg != None:
-            pass
-            #window.GetSurface().blit(cameraImg, (0,0))
         window.Refresh()
 
     window.Close()
+    
 
 if __name__ == "__main__":
     main()

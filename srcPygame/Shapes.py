@@ -209,14 +209,15 @@ class Triangle(Shape):
 class Image(Shape):
     _directory = None
     _img = None
-    def __init__(self, pos, directory =""):
-        if directory == "":
-            raise Exception("Images need a directory")
-        
+    def __init__(self, pos, directory ="", img = None):
         self._directory = directory
-        self._img = pygame.image.load(directory).convert()
+        if img == None:
+            self._img = pygame.image.load(directory).convert()
+        else:
+            self._img = img
         self.x = pos[0]
         self.y = pos[1]
+
     
     def draw(self, window):
         window.GetSurface().blit(self._img, (self.x, self.y))

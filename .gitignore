@@ -36,6 +36,8 @@
 
 # folders
 __pycache__/*
+srcPygame/build/*
+srcPygame/dist/*
 
 # python relate
 *.pyc

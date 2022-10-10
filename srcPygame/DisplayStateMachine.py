@@ -2,6 +2,7 @@ from enum import Enum
 from itertools import count
 import math
 from Shapes import Shape, Rectangle, Oval, Triangle, Image, Line
+from CameraThread import CameraThread
 
 
 class Const():
@@ -60,6 +61,12 @@ class DashState(Enum):
 
 class DisplayStateMachine():
     def __init__(self):
+        self._rearViewCamera = CameraThread("rear", 0)
+        self._rearViewCamera.start()
+        self._leftViewCamera = CameraThread("left", 1)
+        self._leftViewCamera.start()
+        #self._rightViewCamera = CameraThread("right", 2)
+
         self._state = DashState.DEFAULT
         self._defaultDrawList = self._DefualtContents()
         self._leftDrawList    = self._LeftViewContents()
@@ -79,7 +86,7 @@ class DisplayStateMachine():
         self._rightArrowObj    = Image(Const.RIGHT_ARROW_IMG_POS, directory = Const.RIGHT_ARROW_IMG_SRC)
         self._enginewarningObj = Image(Const.ENGINE_WARNING_IMG_POS, directory = Const.ENGINE_WARNING_IMG_SRC) 
     def SetState(self, state):
-        _state = DashState(state)
+        self._state = DashState(state)
 
     def GetDrawList(self):
         output = [];
@@ -100,8 +107,12 @@ class DisplayStateMachine():
                 output.append(self._leftArrowObj)
             if self._rightIndicator:
                 output.append(self._rightArrowObj)
+        elif self._state == DashState.REAR_VIEW:
+            for obj in self._rearDrawList:
+                output.append(obj)
+            output.append(self._rearViewCamera.GetPyImage())
         else:
-            raise Exception("The desired state does not exist (line 33 DisplayManager.py)")
+            raise Exception("The desired state does not exist (line 114 DisplayManager.py)")
         return output
 
     def _DefualtContents(self):
@@ -203,13 +214,3 @@ class DisplayStateMachine():
             Const.RPM_NEEDLE_POS, 
             Const.RPM_NEEDLE_LENGTH
         )
-
-
-
-        
-
-
-
-
-
-    

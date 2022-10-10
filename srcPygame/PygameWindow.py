@@ -7,7 +7,7 @@ import pygame;
 import sys;
 
 class Constants():
-    DEFAULT_BACKGROUND_COLOUR = (77,77,77);
+    DEFAULT_BACKGROUND_COLOUR = (0,0,0);
 
 class PygameWindow():
     def __init__(self, width, height, title):
@@ -41,12 +41,16 @@ class PygameWindow():
     def Close(self):
         pygame.display.quit()
         pygame.quit()
+    
+    def Clear(self):
+        self.GetSurface().fill(Constants.DEFAULT_BACKGROUND_COLOUR)
 
     def Draw(self, drawList):
         for shape in drawList:
             shape.draw(self)
 
     def Refresh(self):
+        
         pygame.display.flip();
 
     def GetSurface(self):
