@@ -17,14 +17,25 @@ Daniel Failla [Personal Email](danielfailla4@gmail.com) ([Student Email](1031915
 Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](103072015@student.swin.edu.au))
 
 ### Versions
+#### 1.05 Design Updates
+Coming soon...
+
 #### 1.04 OpenCV Camera
-In progress...
+Camera Support! Each camera runs on their own thread and each image is read from alternating buffers for thread safety.<br>
+This works out perfectly as we need support for 3 cameras and the RPi4 has 4 cores... (3 camera threads and 1 main thread).
+<br><img src="/progress/104.gif" height="200" width = "600">
 #### 1.03 Pygame Demo
 After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.
-|           | Tkinter | Pygame |
+|  Desktop  | Tkinter | Pygame |
 |-----------|---------|--------|
 | Time (ms) | 3.536   | 1.053  |
 | Freq (Hz) | 282.8   | 949.7  |
+
+|  RPi4     | Tkinter | Pygame |
+|-----------|---------|--------|
+| Time (ms) | 24.44   | 40.92  |
+| Freq (Hz) | 4.711   | 212.6  |
+* From 40 fps to 200 fps (on the target device) was a major and neccessary improvement.
 <img src="/progress/103.gif" height="200" width = "600">
 
 #### 1.02 Tkinter in Realtime

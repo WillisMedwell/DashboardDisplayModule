@@ -3,6 +3,7 @@ import cv2
 import threading
 import pygame
 import numpy
+from Shapes import Image
 
 # An class that is derived from the thread class. 
 #   1) CameraThread.start() method calls the CameraThread.run().
@@ -11,7 +12,7 @@ import numpy
 #   3) Now the image can be accessed safely...
 class CameraThread(threading.Thread):
     def __init__(self, cameraName, cameraId):
-        threading.Thread.__init__(self)
+        threading.Thread.__init__(self, daemon=True)
         self.cameraName = cameraName
         self.cameraId = cameraId
         self.camera = cv2.VideoCapture(self.cameraId)
@@ -28,15 +29,14 @@ class CameraThread(threading.Thread):
                 ret, self.cvImage = self.camera.read()
                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
                 if self.LastImg == 2:
-                    self.pyImage1 = pygame.surfarray.make_surface(self.cvImage)
+                    self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 1;
                 elif self.LastImg == 1:
-                    self.pyImage2 = pygame.surfarray.make_surface(self.cvImage)
+                    self.pyImage2 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 2;
                 elif self.LastImg == None:
-                    self.pyImage1 = pygame.surfarray.make_surface(self.cvImage)
+                    self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 1;
-                
 
     def GetPyImage(self):
         if self.LastImg == 1:
