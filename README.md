@@ -21,7 +21,7 @@ Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](1030
 Coming soon...
 
 #### 1.05 Image Detection
-Due to the power of the OpenCV library we were able to integrate machine vision.
+Due to the OpenCV library, we were able to integrate machine vision using a trained model (XML).
 <br><img src="/progress/105.gif" height="200" width = "640">
 
 #### 1.04 OpenCV Camera
