@@ -22,12 +22,12 @@ Coming soon...
 
 #### 1.05 Image Detection
 Due to the power of the OpenCV library we were able to integrate machine vision.
-<br><img src="/progress/105.gif" height="200" width = "600">
+<br><img src="/progress/105.gif" height="200" width = "640">
 
 #### 1.04 OpenCV Camera
 Camera Support! Each camera runs on their own thread and each image is read from alternating buffers for thread safety.<br>
 This works out perfectly as we need support for 3 cameras and the RPi4 has 4 cores... (3 camera threads and 1 main thread).
-<br><img src="/progress/104.gif" height="200" width = "600">
+<br><img src="/progress/104.gif" height="200" width = "640">
 #### 1.03 Pygame Demo
 After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter to Pygame. This tripled the performance.
 |  Desktop  | Tkinter | Pygame |
