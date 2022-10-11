@@ -41,3 +41,7 @@ srcPygame/dist/*
 
 # python relate
 *.pyc
+
+# build related
+*.exe
+*.spec

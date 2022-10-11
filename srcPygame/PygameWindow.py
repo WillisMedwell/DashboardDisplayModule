@@ -7,11 +7,12 @@ import pygame;
 import sys;
 
 class Constants():
-    DEFAULT_BACKGROUND_COLOUR = (0,0,0);
+    DEFAULT_BACKGROUND_COLOUR = (0,0,0)
 
 class PygameWindow():
     def __init__(self, width, height, title):
         pygame.init()
+        pygame.font.init()
         self._window = pygame.display.set_mode((width, height))
         self._window.fill(Constants.DEFAULT_BACKGROUND_COLOUR);
         self._running = True

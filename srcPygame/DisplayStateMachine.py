@@ -1,12 +1,19 @@
+from asyncio import constants
 from enum import Enum
 from itertools import count
 import math
-from Shapes import Shape, Rectangle, Oval, Triangle, Image, Line
+from msilib.schema import Font
+
+from cv2 import circle
+from Shapes import Shape, Rectangle, Oval, Triangle, Image, Line, Text
 from CameraThread import CameraThread
+import pygame, sys, os
 
 
 class Const():
     PI = 3.141592654
+
+    DEFAULT_BACKGROUND_COLOUR = (0,0,0);
 
     SPEED_MIN = 0;
     SPEED_MAX = 240
@@ -41,16 +48,19 @@ class Const():
 
     DEGREES_TO_RADIAN_FACTOR = PI/180
     
-    DEFAULT_DASH_IMG_SRC = "images/dash.png"
-    DEFAULT_DASH_POS = (0, 0)
-    LEFT_ARROW_IMG_SRC = "images/leftarrow.png"
-    LEFT_ARROW_IMG_POS = (540-62, 20)
-    RIGHT_ARROW_IMG_SRC = "images/rightarrow.png"
-    RIGHT_ARROW_IMG_POS = (660, 20)
-    ENGINE_WARNING_IMG_SRC = "images/enginewarning.png"
-    ENGINE_WARNING_IMG_POS = (550, 59)
-    HANDBRAKE_IMG_SRC = "images/handbrake.png"
-    HANDBRAKE_IMG_POS = (610, 60)
+    DEFAULT_DASH_IMG_SRC    = "resources/images/dash.png"
+    LEFT_ARROW_IMG_SRC      = "resources/images/leftarrow.png"
+    RIGHT_ARROW_IMG_SRC     = "resources/images/rightarrow.png"
+    ENGINE_WARNING_IMG_SRC  = "resources/images/enginewarning.png"
+    HANDBRAKE_IMG_SRC       = "resources/images/handbrake.png"
+
+    DEFAULT_DASH_POS        = (0, 0)
+    LEFT_ARROW_IMG_POS      = (540-62, 20)
+    RIGHT_ARROW_IMG_POS     = (660, 20)
+    ENGINE_WARNING_IMG_POS  = (550, 59)
+    HANDBRAKE_IMG_POS       = (610, 60)
+
+    FONT_DEFAULT = "resources/fonts/NotoSansJP.otf"
 
 
 class DashState(Enum):
@@ -61,13 +71,21 @@ class DashState(Enum):
 
 class DisplayStateMachine():
     def __init__(self):
+        # set initial state
+        self._state = DashState.DEFAULT
+        DEFAULT_BACKGROUND_COLOUR = (0,0,0);
+
+        # start camera threads
         self._rearViewCamera = CameraThread("rear", 0)
         self._rearViewCamera.start()
         self._leftViewCamera = CameraThread("left", 1)
         self._leftViewCamera.start()
-        #self._rightViewCamera = CameraThread("right", 2)
-
-        self._state = DashState.DEFAULT
+        self._rightViewCamera = CameraThread("right", 2)
+        self._rightViewCamera.start()
+        # load fonts
+        self._font_default = pygame.font.Font(Const.FONT_DEFAULT, 35)
+        self._font_test = pygame.font.SysFont('Corbel', 35)
+        # load group image lists
         self._defaultDrawList = self._DefualtContents()
         self._leftDrawList    = self._LeftViewContents()
         self._rightDrawList   = self._RightViewContents()
@@ -80,11 +98,14 @@ class DisplayStateMachine():
         self._fuel  = 0
         self._temp  = 0
         self._rpm   = 0
-
+        # load individual dynamic images 
         self._handbrakeObj     = Image(Const.HANDBRAKE_IMG_POS, directory = Const.HANDBRAKE_IMG_SRC)
         self._leftArrowObj     = Image(Const.LEFT_ARROW_IMG_POS, directory = Const.LEFT_ARROW_IMG_SRC)
         self._rightArrowObj    = Image(Const.RIGHT_ARROW_IMG_POS, directory = Const.RIGHT_ARROW_IMG_SRC)
         self._enginewarningObj = Image(Const.ENGINE_WARNING_IMG_POS, directory = Const.ENGINE_WARNING_IMG_SRC) 
+        # helper shapes.
+        self._speedometerCircle = Oval(200,200, Const.SPEED_NEEDLE_POS[0]-100, Const.SPEED_NEEDLE_POS[1]-100, color= Const.DEFAULT_BACKGROUND_COLOUR)
+        self._speedometerText = Text(Const.SPEED_NEEDLE_POS[0]-20, Const.SPEED_NEEDLE_POS[1]-100, "0", self._font_default)
     def SetState(self, state):
         self._state = DashState(state)
 
@@ -96,6 +117,9 @@ class DisplayStateMachine():
             for obj in self._defaultDrawList:
                 output.append(obj)
             output.append(self._GetSpeedNeedle())
+            output.append(self._speedometerCircle)
+            self._speedometerText._text = str(self._speed)
+            output.append(self._speedometerText)
             output.append(self._GetFuelNeedle())
             output.append(self._GetTempNeedle())
             output.append(self._GetRpmNeedle())
@@ -118,6 +142,7 @@ class DisplayStateMachine():
     def _DefualtContents(self):
         return [
             Image(Const.DEFAULT_DASH_POS, directory = Const.DEFAULT_DASH_IMG_SRC),
+            Text(0,0, 'hello world', self._font_default)
         ]
 
     def _LeftViewContents(self):
@@ -214,3 +239,10 @@ class DisplayStateMachine():
             Const.RPM_NEEDLE_POS, 
             Const.RPM_NEEDLE_LENGTH
         )
+    def CloseThreads(self):
+        self._rearViewCamera.Kill()
+        self._rearViewCamera.join()
+        self._leftViewCamera.Kill()
+        self._leftViewCamera.join()
+        self._rightViewCamera.Kill()
+        self._rightViewCamera.join()

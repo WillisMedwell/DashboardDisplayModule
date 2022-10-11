@@ -2,7 +2,7 @@ from pickletools import pyfloat
 import cv2
 import threading
 import pygame
-import numpy
+from Timer import Timer
 from Shapes import Image
 
 # An class that is derived from the thread class. 
@@ -20,11 +20,15 @@ class CameraThread(threading.Thread):
         self.pyImage1 = None
         self.pyImage2 = None
         self.LastImg = 1;
-    
+        self._kill = False
+
     def run(self):
-        while True:
+        timer = Timer()
+        while not self._kill:
+            # get the feed.
             if not self.camera.isOpened():
                 self.camera = cv2.VideoCapture(self.cameraId)
+                continue
             else:
                 ret, self.cvImage = self.camera.read()
                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
@@ -37,6 +41,13 @@ class CameraThread(threading.Thread):
                 elif self.LastImg == None:
                     self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 1;
+                # Sleep after image is read.
+                if(timer.GetElapsed().s() <= 1/60):
+                    print("thread {} sleep".format(self.cameraId))
+                    timer.Sleep(1/60 - timer.GetElapsed().s())
+                timer.Reset()
+        self.camera.release()
+        
 
     def GetPyImage(self):
         if self.LastImg == 1:
@@ -46,10 +57,8 @@ class CameraThread(threading.Thread):
         elif self.LastImg == None:
             return None
 
-
-
-
-
+    def Kill(self):
+        self._kill = True
 
 # class camThread(threading.Thread):
 #     def __init__(self, previewName, camID):
