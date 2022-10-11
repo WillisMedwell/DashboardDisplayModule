@@ -212,7 +212,7 @@ class Image(Shape):
     def __init__(self, pos, directory ="", img = None):
         self._directory = directory
         if img == None:
-            self._img = pygame.image.load(directory).convert()
+            self._img = pygame.image.load(directory).convert_alpha()
         else:
             self._img = img
         self.x = pos[0]

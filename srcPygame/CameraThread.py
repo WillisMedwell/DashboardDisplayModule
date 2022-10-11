@@ -21,6 +21,7 @@ class CameraThread(threading.Thread):
         self.pyImage2 = None
         self.LastImg = 1;
         self._kill = False
+        self.carCascade = cv2.CascadeClassifier("resources/detection/cars4.xml")
 
     def run(self):
         timer = Timer()
@@ -31,15 +32,28 @@ class CameraThread(threading.Thread):
                 continue
             else:
                 ret, self.cvImage = self.camera.read()
+                self.gray = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2GRAY)
+                self.cars = self.carCascade.detectMultiScale(self.gray, 1.1, 1)
+                for (x,y,w,h) in self.cars:
+                    cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,0),3)
+                    cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,255),2)
+                    break
+                
+
+
                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
+
                 if self.LastImg == 2:
+                    self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
                     self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 1;
                 elif self.LastImg == 1:
+                    self.pyImageSquare2 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
                     self.pyImage2 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
                     self.LastImg = 2;
-                elif self.LastImg == None:
+                elif self.LastImg == None:                        
                     self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+                    self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
                     self.LastImg = 1;
                 # Sleep after image is read.
                 if(timer.GetElapsed().s() <= 1/60):
@@ -56,6 +70,15 @@ class CameraThread(threading.Thread):
             return self.pyImage2
         elif self.LastImg == None:
             return None
+    
+    def GetSquarePyImage(self):
+        if self.LastImg == 1:
+            return self.pyImageSquare1
+        elif self.LastImg == 2: 
+            return self.pyImageSquare2
+        elif self.LastImg == None:
+            return None
+
 
     def Kill(self):
         self._kill = True
