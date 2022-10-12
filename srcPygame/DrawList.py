@@ -101,9 +101,10 @@ class DrawList():
         self.Clear()
         # image cropping
         img = self._rearCamera.GetSquarePyImage();
-        img.set_x(132)
-        img.set_y(12)
-        self._shapes.append(img)
+        if img != None:
+            img.set_x(132)
+            img.set_y(12)
+            self._shapes.append(img)
         self._shapes.append(self.maskLeft)
         # speed text
         self.speedText._text=str(speed)
@@ -130,9 +131,10 @@ class DrawList():
         self.Clear()
         # image cropping
         img = self._rearCamera.GetSquarePyImage();
-        img.set_x(1280-132-375)
-        img.set_y(12)
-        self._shapes.append(img)
+        if img != None:
+            img.set_x(1280-132-375)
+            img.set_y(12)
+            self._shapes.append(img)
         self._shapes.append(self.maskRight)
         # speed needle
         self._shapes.append(GetNeedle(0, 210, 240, -30, speed, (320, 200), 180))
@@ -158,11 +160,12 @@ class DrawList():
     def SetToRearView(self):
         self.Clear()
         img = self._rearCamera.GetPyImage();
-        img.set_x(1280/2)
-        img.set_y(0)
-        self._shapes.append(img)
-        
+        if img != None:
+            img.set_x(1280/2)
+            img.set_y(0)
+            self._shapes.append(img)
 
+    
     def __del__(self):
         self._rearCamera.Kill()
         self._leftCamera.Kill()

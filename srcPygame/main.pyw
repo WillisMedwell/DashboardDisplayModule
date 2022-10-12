@@ -19,9 +19,9 @@ def main():
     while(window.IsRunning()):
         # Sleep on windows system is very hit and miss; however, on linux it is very good. 
         # So this improves efficiency on the targeted device.
-        # while(time.GetElapsed().s() <= 1/60):
-        #     pass
-        #     time.Sleep((1/60)-time.GetElapsed().s())
+        while(time.GetElapsed().s() <= 1/60):
+            time.Sleep((1/60)-time.GetElapsed().s())
+            pass
 
         # keep average record of times.
         times.append(time.GetElapsed().ms())
@@ -76,6 +76,8 @@ def main():
             displayManager.SetState(DashState.LEFT_VIEW)
         elif window.WasKeyTyped(pygame.K_4):
             displayManager.SetState(DashState.RIGHT_VIEW)
+        elif window.WasKeyTyped(pygame.K_ESCAPE):
+            break
 
         # Drawing screen.
         window.Clear()

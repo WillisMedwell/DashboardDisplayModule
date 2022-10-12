@@ -13,7 +13,8 @@ class PygameWindow():
     def __init__(self, width, height, title):
         pygame.init()
         pygame.font.init()
-        self._window = pygame.display.set_mode((width, height))
+        pygame.mouse.set_visible(False)
+        self._window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
         self._window.fill(Constants.DEFAULT_BACKGROUND_COLOUR);
         self._running = True
         pygame.display.flip()
@@ -47,11 +48,14 @@ class PygameWindow():
         self.GetSurface().fill(Constants.DEFAULT_BACKGROUND_COLOUR)
 
     def Draw(self, drawList):
+        if drawList == None:
+            return
         for shape in drawList:
+            if shape == None:
+                continue
             shape.draw(self)
 
     def Refresh(self):
-        
         pygame.display.flip();
 
     def GetSurface(self):
