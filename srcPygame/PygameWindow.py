@@ -14,7 +14,7 @@ class PygameWindow():
         pygame.init()
         pygame.font.init()
         pygame.mouse.set_visible(False)
-        self._window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+        self._window = pygame.display.set_mode((width, height),pygame.FULLSCREEN)
         self._window.fill(Constants.DEFAULT_BACKGROUND_COLOUR);
         self._running = True
         pygame.display.flip()
