@@ -17,20 +17,23 @@ NEEDLE_THICKNESS = 5
 NEEDLE_COLOUR = (255,255,255)
 
 # Sources of images
-DEFAULT_DASH_IMG_SRC    = "resources/images/dash.png"
-LEFT_ARROW_IMG_SRC      = "resources/images/leftarrow.png"
-RIGHT_ARROW_IMG_SRC     = "resources/images/rightarrow.png"
-ENGINE_WARNING_IMG_SRC  = "resources/images/enginewarning.png"
-HANDBRAKE_IMG_SRC       = "resources/images/handbrake.png"
-SPEEDRING_IMG_SRC       = "resources/images/speedring.png"
-RPMRING_IMG_SRC         = "resources/images/rpmring.png"
-FUELLINE_IMG_SRC        = "resources/images/fuelline.png"
-MASK_IMG_SRC            = "resources/images/mask.png"
-STREAK_IMG_SRC          = "resources/images/Streaks.png"
+DEFAULT_DASH_IMG_SRC    = "../resources/images/dash.png"
+LEFT_ARROW_IMG_SRC      = "../resources/images/leftarrow.png"
+RIGHT_ARROW_IMG_SRC     = "../resources/images/rightarrow.png"
+ENGINE_WARNING_IMG_SRC  = "../resources/images/enginewarning.png"
+HANDBRAKE_IMG_SRC       = "../resources/images/handbrake.png"
+SPEEDRING_IMG_SRC       = "../resources/images/speedring.png"
+RPMRING_IMG_SRC         = "../resources/images/rpmring.png"
+FUELLINE_IMG_SRC        = "../resources/images/fuelline.png"
+MASK_IMG_SRC            = "../resources/images/mask.png"
+ARROW_LEFT_IMG_SRC      = "../resources/images/leftarrow.png"
+ARROW_RIGHT_IMG_SRC     = "../resources/images/rightarrow.png"
+STREAK_IMG_SRC          = "../resources/images/Streaks.png"
+
 
 
 # font sources
-FONT_DEFAULT = "resources/fonts/NotoSansJP.otf"
+FONT_DEFAULT = "../resources/fonts/NotoSansJP.otf"
 
 
 class DrawList():
@@ -40,9 +43,9 @@ class DrawList():
         # start camera threads
         self._rearCamera = CameraThread("rear", 0)
         self._rearCamera.start()
-        self._leftCamera = CameraThread("left", 1)
+        self._leftCamera = CameraThread("left", 2)
         self._leftCamera.start()
-        self._rightCamera = CameraThread("right", 2)
+        self._rightCamera = CameraThread("right", 4)
         self._rightCamera.start()
 
         # initialise fonts
@@ -61,11 +64,11 @@ class DrawList():
         self.maskLeft   = Image((88,0), directory=MASK_IMG_SRC)
         self.maskRight  = Image((1280 - 88 - 465,0), directory=MASK_IMG_SRC)
 
+        self.arrowLeft  = Image((0,0), directory=ARROW_LEFT_IMG_SRC)
+        self.arrowRight = Image((0,0), directory=ARROW_RIGHT_IMG_SRC)
         self.fuel       = Line(490, 378, 490, 378, 22, color=(255,255,255))
         self.topLinebar = Line(510, 90, 750, 90, 2, color=(255,255,255))
-
-        ##TIme
-       
+      
         self._systemtime  = Text(600,62, str(datetime.now()), self.fontSmall, color=(255,255,255))
 
 
@@ -119,7 +122,7 @@ class DrawList():
         self.Clear()
 
         # image cropping
-        img = self._rearCamera.GetSquarePyImage();
+        img = self._leftCamera.GetSquarePyImage();
         if img != None:
             img.set_x(132)
             img.set_y(12)
@@ -149,7 +152,7 @@ class DrawList():
     def SetToRightView(self, speed, rpm, fuel, temp):
         self.Clear()
         # image cropping
-        img = self._rearCamera.GetSquarePyImage();
+        img = self._rightCamera.GetSquarePyImage();
         if img != None:
             img.set_x(1280-132-375)
             img.set_y(12)
@@ -183,6 +186,11 @@ class DrawList():
             img.set_x(1280/2)
             img.set_y(0)
             self._shapes.append(img)
+
+    def AddLeftIndicator(self):
+        self._shapes.append(self.arrowLeft)
+    def AddRightIndicator(self):
+        self._shapes.append(self.arrowRight)
 
     
     def __del__(self):

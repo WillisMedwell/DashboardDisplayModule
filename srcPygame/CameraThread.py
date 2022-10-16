@@ -1,9 +1,15 @@
-from pickletools import pyfloat
+
 import cv2
 import threading
 import pygame
 from Timer import Timer
 from Shapes import Image
+
+imageDetection = False
+reducedImageSizeX = 533
+reducedImageSizeY = 400
+#reducedImageSizeX = 160
+#reducedImageSizeY = 120
 
 # An class that is derived from the thread class. 
 #   1) CameraThread.start() method calls the CameraThread.run().
@@ -15,32 +21,44 @@ class CameraThread(threading.Thread):
         threading.Thread.__init__(self, daemon=True)
         self.cameraName = cameraName
         self.cameraId = cameraId
-        self.camera = cv2.VideoCapture(self.cameraId)
+    
+        #self.camera = cv2.VideoCapture(self.cameraId, cv2.CAP_V4L)
         self.cvImage = None
         self.pyImage1 = None
         self.pyImage2 = None
         self.LastImg = 1;
         self._kill = False
-        self.carCascade = cv2.CascadeClassifier("resources/detection/cars4.xml")
+        self.carCascade = cv2.CascadeClassifier("../resources/detection/cars4.xml")
 
     def run(self):
-        timer = Timer()
+        self.camera = cv2.VideoCapture(self.cameraId, cv2.CAP_V4L2)
+        # scale down camera resolution.
+        self.camera.set(3, reducedImageSizeX)
+        self.camera.set(4, reducedImageSizeY)
+        self.camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+        self.timer = Timer()
         while not self._kill:
-            # get the feed.
+            # get the camera stream.
             if not self.camera.isOpened():
                 self.camera = cv2.VideoCapture(self.cameraId)
+                self.camera.set(3, reducedImageSizeX)
+                self.camera.set(4, reducedImageSizeY)
                 continue
             else:
                 ret, self.cvImage = self.camera.read()
-                self.gray = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2GRAY)
-                self.cars = self.carCascade.detectMultiScale(self.gray, 1.1, 1)
-                for (x,y,w,h) in self.cars:
-                    cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,0),3)
-                    cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,255),2)
-                    break
                 
-
-
+                if ret == False:
+                    continue;
+                
+                if imageDetection:
+                    self.gray = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2GRAY)
+                    self.cars = self.carCascade.detectMultiScale(self.gray, 1.1, 1)
+                    for (x,y,w,h) in self.cars:
+                        cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,0),3)
+                        cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,255),2)
+                        break
+                
+                
                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
 
                 if self.LastImg == 2:
@@ -56,10 +74,12 @@ class CameraThread(threading.Thread):
                     self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
                     self.LastImg = 1;
                 # Sleep after image is read.
-                if(timer.GetElapsed().s() <= 1/60):
-                    print("thread {} sleep".format(self.cameraId))
-                    timer.Sleep(1/60 - timer.GetElapsed().s())
-                timer.Reset()
+                #if(timer.GetElapsed().s() <= 1/60):
+                #    print("thread {} sleep".format(self.cameraId))
+                #    timer.Sleep(1/60 - timer.GetElapsed().s())
+                #print("thread {} duration: {}ms".format(self.cameraId, self.timer.GetElapsed().ms()))
+                #self.timer.Reset()
+                
         self.camera.release()
         
 

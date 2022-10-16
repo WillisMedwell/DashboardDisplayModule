@@ -8,6 +8,7 @@ from cv2 import circle
 from DrawList import DrawList
 from CameraThread import CameraThread
 from Shapes import Shape, Oval, Image, Line, Text
+from IndicatorController import IndicatorController
 import pygame, sys, os
 
 
@@ -35,7 +36,8 @@ class DisplayStateMachine():
         self._temp  = 0
         self._rpm   = 0
         self._drawlist = DrawList()
-        # load individual dynamic images 
+        
+        self._indicatorController = IndicatorController(0.5)
 
     def SetState(self, state):
         self._state = DashState(state)
@@ -56,15 +58,25 @@ class DisplayStateMachine():
             self._drawlist.SetToRearView()
         else:
             raise Exception("The desired state does not exist (line 114 DisplayManager.py)")
+
+        if self._leftIndicator:
+            if self._indicatorController.IsActive():
+                self._drawlist.AddLeftIndicator()
+        if self._rightIndicator:
+            if self._indicatorController.IsActive():
+                self._drawlist.AddRightIndicator()
+
         return self._drawlist._shapes
 
 
     def TurnOnLeftIndicator(self):
         self._leftIndicator = True;
         self._rightIndicator = False;
+        self._indicatorController.Restart()
     def TurnOnRightIndicator(self):
         self._leftIndicator = False;
         self._rightIndicator = True;
+        self._indicatorController.Restart()
     def TurnOffIndicators(self):
         self._leftIndicator = False
         self._rightIndicator = False
