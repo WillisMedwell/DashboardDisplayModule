@@ -16,24 +16,24 @@ NEEDLE_THICKNESS = 2
 NEEDLE_COLOUR = (255,255,255)
 
 # Sources of images
-DEFAULT_DASH_IMG_SRC    = "resources/images/dash.png"
-LEFT_ARROW_IMG_SRC      = "resources/images/leftarrow.png"
-RIGHT_ARROW_IMG_SRC     = "resources/images/rightarrow.png"
-ENGINE_WARNING_IMG_SRC  = "resources/images/enginewarning.png"
-HANDBRAKE_IMG_SRC       = "resources/images/handbrake.png"
-SPEEDRING_IMG_SRC       = "resources/images/speedring.png"
-RPMRING_IMG_SRC         = "resources/images/rpmring.png"
-FUELLINE_IMG_SRC        = "resources/images/fuelline.png"
-MASK_IMG_SRC            = "resources/images/mask.png"
-ARROW_LEFT_IMG_SRC      = "resources/images/leftarrow.png"
-ARROW_RIGHT_IMG_SRC     = "resources/images/rightarrow.png"
+DEFAULT_DASH_IMG_SRC    = "../resources/images/dash.png"
+LEFT_ARROW_IMG_SRC      = "../resources/images/leftarrow.png"
+RIGHT_ARROW_IMG_SRC     = "../resources/images/rightarrow.png"
+ENGINE_WARNING_IMG_SRC  = "../resources/images/enginewarning.png"
+HANDBRAKE_IMG_SRC       = "../resources/images/handbrake.png"
+SPEEDRING_IMG_SRC       = "../resources/images/speedring.png"
+RPMRING_IMG_SRC         = "../resources/images/rpmring.png"
+FUELLINE_IMG_SRC        = "../resources/images/fuelline.png"
+MASK_IMG_SRC            = "../resources/images/mask.png"
+ARROW_LEFT_IMG_SRC      = "../resources/images/leftarrow.png"
+ARROW_RIGHT_IMG_SRC     = "../resources/images/rightarrow.png"
 
 
 
 
 
 # font sources
-FONT_DEFAULT = "resources/fonts/NotoSansJP.otf"
+FONT_DEFAULT = "../resources/fonts/NotoSansJP.otf"
 
 
 class DrawList():
@@ -43,9 +43,9 @@ class DrawList():
         # start camera threads
         self._rearCamera = CameraThread("rear", 0)
         self._rearCamera.start()
-        self._leftCamera = CameraThread("left", 1)
+        self._leftCamera = CameraThread("left", 2)
         self._leftCamera.start()
-        self._rightCamera = CameraThread("right", 2)
+        self._rightCamera = CameraThread("right", 4)
         self._rightCamera.start()
 
         # initialise fonts
@@ -138,7 +138,7 @@ class DrawList():
     def SetToRightView(self, speed, rpm, fuel, temp):
         self.Clear()
         # image cropping
-        img = self._rearCamera.GetSquarePyImage();
+        img = self._rightCamera.GetSquarePyImage();
         if img != None:
             img.set_x(1280-132-375)
             img.set_y(12)
