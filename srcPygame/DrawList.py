@@ -2,6 +2,7 @@ from Shapes import Shape, Oval, Image, Line, Text, Rectangle
 from CameraThread import CameraThread
 import pygame
 import math
+from datetime import datetime
 
 
 # Math
@@ -12,7 +13,7 @@ DEGREES_TO_RADIAN_FACTOR = PI/180
 BACKGROUND_COLOUR = (0,0,0)
 
 # needle constants
-NEEDLE_THICKNESS = 2
+NEEDLE_THICKNESS = 5
 NEEDLE_COLOUR = (255,255,255)
 
 # Sources of images
@@ -27,8 +28,7 @@ FUELLINE_IMG_SRC        = "../resources/images/fuelline.png"
 MASK_IMG_SRC            = "../resources/images/mask.png"
 ARROW_LEFT_IMG_SRC      = "../resources/images/leftarrow.png"
 ARROW_RIGHT_IMG_SRC     = "../resources/images/rightarrow.png"
-
-
+STREAK_IMG_SRC          = "../resources/images/Streaks.png"
 
 
 
@@ -52,20 +52,24 @@ class DrawList():
         self.fontMedium = pygame.font.Font(FONT_DEFAULT, 35)
         self.fontSmall  = pygame.font.Font(FONT_DEFAULT, 20)
 
-        self.speedText  = Text(620, 150, str(0), self.fontMedium, color=(255,255,255))
-        self.kmhText    = Text(620, 200, "km/h", self.fontSmall, color=(255,255,255))
-        self.tempText   = Text(500, 350, "°C", self.fontSmall, color=(255,255,255))
+        self.speedText  = Text(590, 155, str(0), self.fontMedium, color=(255,255,255))
+        self.kmhText    = Text(650, 173, "KMPH", self.fontSmall, color=(255,255,255))
+        self.tempText   = Text(500, 62, "°C", self.fontSmall, color=(255,255,255))
+        self.KmRemaining   = Text(1150, 355, "Km", self.fontSmall, color=(255,255,255))
 
         self.speedRing  = Image((132,12), directory=SPEEDRING_IMG_SRC)
         self.rpmRing    = Image((1148-378,12), directory=RPMRING_IMG_SRC)
-        self.fuelLine   = Image((490,0), directory=FUELLINE_IMG_SRC)
+        self.fuelLine   = Image((490,345), directory=FUELLINE_IMG_SRC)
+        self.streaks   = Image((510,200), directory=STREAK_IMG_SRC)
         self.maskLeft   = Image((88,0), directory=MASK_IMG_SRC)
         self.maskRight  = Image((1280 - 88 - 465,0), directory=MASK_IMG_SRC)
 
         self.arrowLeft  = Image((0,0), directory=ARROW_LEFT_IMG_SRC)
         self.arrowRight = Image((0,0), directory=ARROW_RIGHT_IMG_SRC)
-
-        self.fuel       = Line(491, 21, 491, 21, 3, color=(255,255,255))
+        self.fuel       = Line(490, 378, 490, 378, 22, color=(255,255,255))
+        self.topLinebar = Line(510, 90, 750, 90, 2, color=(255,255,255))
+      
+        self._systemtime  = Text(600,62, str(datetime.now()), self.fontSmall, color=(255,255,255))
 
 
     def Add(self, shapes):
@@ -81,7 +85,7 @@ class DrawList():
     def SetToDefault(self, speed, rpm, fuel, temp):
         self.Clear()
         # speed needle
-        self._shapes.append(GetNeedle(0, 210, 240, -30, speed, (320, 200), 180))
+        
         # speed ring
         self._shapes.append(self.speedRing)
         # speed text
@@ -89,7 +93,7 @@ class DrawList():
         self._shapes.append(self.speedText)
         self._shapes.append(self.kmhText)
         # rpm needle
-        self._shapes.append(GetNeedle(0, 210, 6, -30, rpm, (1280 - 320, 200), 180))
+        
         # rpm ring
         self._shapes.append(self.rpmRing)
         # temp text
@@ -104,9 +108,19 @@ class DrawList():
             fuel = 0
         self.fuel.x2 = 491 + (298 * fuel)
         self._shapes.append(self.fuel)
+        self._shapes.append(self.topLinebar)
+        self._shapes.append(self.KmRemaining)
+        self._shapes.append(GetNeedle(0, 210, 240, -30, speed, (320, 200), 180))
+        self._shapes.append(GetNeedle(0, 210, 6, -30, rpm, (1280 - 320, 200), 180))
 
+        self._shapes.append(self.streaks)
+
+        ##TIME
+        self._systemtime._text = str(datetime.now().strftime("%H:%M"))
+        self._shapes.append(self._systemtime)
     def SetToLeftView(self, speed, rpm, fuel, temp):
         self.Clear()
+
         # image cropping
         img = self._leftCamera.GetSquarePyImage();
         if img != None:
