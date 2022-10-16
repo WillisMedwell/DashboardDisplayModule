@@ -36,7 +36,7 @@ class DisplayStateMachine():
         self._temp  = 0
         self._rpm   = 0
         self._drawlist = DrawList()
-        
+        self._drivingState = "P"
         self._indicatorController = IndicatorController(0.5)
 
     def SetState(self, state):
@@ -46,18 +46,18 @@ class DisplayStateMachine():
     def GetDrawList(self):
         self._drawlist.Clear()
 
-
         # Major layout objects that need to be drawn
         if self._state == DashState.DEFAULT:
-            self._drawlist.SetToDefault(self._speed, self._rpm, self._fuel, self._temp)
+            self._drawlist.SetToDefault(self._speed, self._rpm, self._fuel, self._temp, self._drivingState)
         elif self._state == DashState.LEFT_VIEW:
-            self._drawlist.SetToLeftView(self._speed, self._rpm, self._fuel, self._temp)
+            self._drawlist.SetToLeftView(self._speed, self._rpm, self._fuel, self._temp, self._drivingState)
         elif self._state == DashState.RIGHT_VIEW:
-            self._drawlist.SetToRightView(self._speed, self._rpm, self._fuel, self._temp)
+            self._drawlist.SetToRightView(self._speed, self._rpm, self._fuel, self._temp, self._drivingState)
         elif self._state == DashState.REAR_VIEW:
-            self._drawlist.SetToRearView()
+            self._drawlist.SetToRearView(self._speed, self._rpm, self._fuel, self._temp, self._drivingState)
+            return self._drawlist._shapes
         else:
-            raise Exception("The desired state does not exist (line 114 DisplayManager.py)")
+            raise Exception("The desired state does not exist (line 59 DisplayManager.py)")
 
         if self._leftIndicator:
             if self._indicatorController.IsActive():
@@ -66,17 +66,28 @@ class DisplayStateMachine():
             if self._indicatorController.IsActive():
                 self._drawlist.AddRightIndicator()
 
+        if self._temp < 10:
+            self._drawlist.AddCold()
+        elif self._temp > 200:
+            self._drawlist.AddHot()
+        if self._handbrakeWarning:
+            self._drawlist.AddHandbrake()
+        if self._engineWarning:
+            self._drawlist.AddEngine()
+            
         return self._drawlist._shapes
 
 
     def TurnOnLeftIndicator(self):
-        self._leftIndicator = True;
-        self._rightIndicator = False;
-        self._indicatorController.Restart()
+        if(self._leftIndicator != True):
+            self._leftIndicator = True;
+            self._rightIndicator = False;
+            self._indicatorController.Restart()
     def TurnOnRightIndicator(self):
-        self._leftIndicator = False;
-        self._rightIndicator = True;
-        self._indicatorController.Restart()
+        if(self._rightIndicator != True):
+            self._leftIndicator = False;
+            self._rightIndicator = True;
+            self._indicatorController.Restart()
     def TurnOffIndicators(self):
         self._leftIndicator = False
         self._rightIndicator = False
@@ -97,6 +108,17 @@ class DisplayStateMachine():
         self._temp = temp
     def SetRpm(self, rpm):
         self._rpm = rpm
+    
+    def SetDrivingState(self, state):
+        if(state == "D"):
+            self._drivingState = "D"
+        elif(state == "R"):
+            self._drivingState = "R"
+        elif(state == "N"):
+            self._drivingState = "N"
+        elif(state == "P"):
+            self._drivingState = "P"
+           
 
 
 

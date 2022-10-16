@@ -209,6 +209,7 @@ class Triangle(Shape):
 class Image(Shape):
     _directory = None
     _img = None
+    
     def __init__(self, pos, directory ="", img = None):
         self._directory = directory
         if img == None:
@@ -217,6 +218,8 @@ class Image(Shape):
             self._img = img
         self.x = pos[0]
         self.y = pos[1]
+        self.width = self._img.get_width()
+        self.height = self._img.get_height()
 
     
     def draw(self, window):

@@ -1,15 +1,116 @@
 
+# import cv2
+# import threading
+# import pygame
+# from Timer import Timer
+# from Shapes import Image
+
+# imageDetection = False
+# reducedImageSizeX = 533
+# reducedImageSizeY = 400
+
+# # An class that is derived from the thread class. 
+# #   1) CameraThread.start() method calls the CameraThread.run().
+# #       - The CameraThread.run() method gets the image from the assingned cameraId and stores it in self.image
+# #   2) CameraThread.join() method makes the main thread wait for the CameraThread to finish running.
+# #   3) Now the image can be accessed safely...
+# class CameraThread(threading.Thread):
+#     def __init__(self, cameraName, cameraId):
+#         threading.Thread.__init__(self, daemon=True)
+#         self.cameraName = cameraName
+#         self.cameraId = cameraId
+
+#         self.cvImage = None
+#         self.pyImage1 = None
+#         self.pyImage2 = None
+#         self.LastImg = 1;
+#         self._kill = False
+#         self._init = False
+#         self.pyImageSquare1 = None
+#         self.pyImageSquare2 = None
+#         self.carCascade = cv2.CascadeClassifier("../resources/detection/cars4.xml")
+
+#     def run(self):
+#         self.camera = cv2.VideoCapture(self.cameraId, cv2.CAP_V4L2)
+#         # scale down camera resolution.
+#         self.camera.set(3, reducedImageSizeX)
+#         self.camera.set(4, reducedImageSizeY)
+#         self.camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+#         self._init = True
+#         self.timer = Timer()
+#         while not self._kill:
+#             # get the camera stream.
+#             if not self.camera.isOpened():
+#                 self.camera = cv2.VideoCapture(self.cameraId)
+#                 self.camera.set(3, reducedImageSizeX)
+#                 self.camera.set(4, reducedImageSizeY)
+#                 self.camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+#                 continue
+#             else:
+#                 ret, self.cvImage = self.camera.read()
+                
+#                 if ret == False:
+#                     continue;
+                
+#                 if imageDetection:
+#                     self.gray = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2GRAY)
+#                     self.cars = self.carCascade.detectMultiScale(self.gray, 1.1, 1)
+#                     for (x,y,w,h) in self.cars:
+#                         cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,0),3)
+#                         cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,255),2)
+#                         break
+                                
+#                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
+
+#                 if self.LastImg == 2:
+#                     self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
+#                     self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+#                     self.LastImg = 1;
+#                 elif self.LastImg == 1:
+#                     self.pyImageSquare2 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
+#                     self.pyImage2 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+#                     self.LastImg = 2;
+#                 elif self.LastImg == None:                        
+#                     self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+#                     self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
+#                     self.LastImg = 1;
+#                 # Sleep after image is read.
+#                 if(self.timer.GetElapsed().s() <= 1/30):
+#                     self.timer.Sleep((1/30 - self.timer.GetElapsed().s())*0.9)
+#             self.timer.Reset()
+                
+#         self.camera.release()
+        
+#     def GetPyImage(self):
+#         if not self._init:
+#             return None
+
+#         if self.LastImg == 1:
+#             return self.pyImage1
+#         elif self.LastImg == 2: 
+#             return self.pyImage2
+#         elif self.LastImg == None:
+#             return None
+    
+#     def GetSquarePyImage(self):
+#         if not self._init:
+#             return None
+
+#         if self.LastImg == 1:
+#             return self.pyImageSquare1
+#         elif self.LastImg == 2: 
+#             return self.pyImageSquare2
+#         elif self.LastImg == None:
+#             return None
+
+#     def Kill(self):
+#         self._kill = True
+
 import cv2
 import threading
 import pygame
 from Timer import Timer
 from Shapes import Image
-
-imageDetection = False
-reducedImageSizeX = 533
-reducedImageSizeY = 400
-#reducedImageSizeX = 160
-#reducedImageSizeY = 120
 
 # An class that is derived from the thread class. 
 #   1) CameraThread.start() method calls the CameraThread.run().
@@ -21,120 +122,104 @@ class CameraThread(threading.Thread):
         threading.Thread.__init__(self, daemon=True)
         self.cameraName = cameraName
         self.cameraId = cameraId
-    
-        #self.camera = cv2.VideoCapture(self.cameraId, cv2.CAP_V4L)
         self.cvImage = None
         self.pyImage1 = None
         self.pyImage2 = None
         self.LastImg = 1;
         self._kill = False
+        self._init = False
+        self.pyImageSquare1 = None
+        self.pyImageSquare2 = None
+        self.imageDetection = False
         self.carCascade = cv2.CascadeClassifier("../resources/detection/cars4.xml")
+        self.camera = None
+        self.active = True
+
+    def _cameraInit(self):
+        self.camera = cv2.VideoCapture(self.cameraId)
+        # set scaling for each image
+        if self.cameraName == "rear":       # set image x, y size (full screen)
+            self.camera.set(3, 420)
+            self.camera.set(4, 270)
+        elif self.cameraName == "left":     # set image x, y size (square image)
+            self.camera.set(3, 375)
+            self.camera.set(4, 375)
+            self.imageDetection = True
+        elif self.cameraName == "right":    # set image x, y size (square image)
+            self.camera.set(3, 375)
+            self.camera.set(4, 375)
+            self.imageDetection = True
+        # most efficient format.
+        self.camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+        self._init = True
 
     def run(self):
-        self.camera = cv2.VideoCapture(self.cameraId, cv2.CAP_V4L2)
-        # scale down camera resolution.
-        self.camera.set(3, reducedImageSizeX)
-        self.camera.set(4, reducedImageSizeY)
-        self.camera.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'))
+        self._cameraInit()
         self.timer = Timer()
+        # main loop
         while not self._kill:
             # get the camera stream.
             if not self.camera.isOpened():
-                self.camera = cv2.VideoCapture(self.cameraId)
-                self.camera.set(3, reducedImageSizeX)
-                self.camera.set(4, reducedImageSizeY)
+                self._cameraInit();
                 continue
+            elif not self.active:
+                self.timer.Sleep((1/30)*0.9)
             else:
                 ret, self.cvImage = self.camera.read()
-                
                 if ret == False:
                     continue;
-                
-                if imageDetection:
+                # do image detection if enabled.
+                if self.imageDetection:
                     self.gray = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2GRAY)
                     self.cars = self.carCascade.detectMultiScale(self.gray, 1.1, 1)
                     for (x,y,w,h) in self.cars:
                         cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,0),3)
                         cv2.rectangle(self.cvImage,(x,y),(x+w,y+h),(0,0,255),2)
                         break
-                
-                
+                # load images into memory
                 self.cvImage = cv2.cvtColor(self.cvImage, cv2.COLOR_BGR2RGB).swapaxes(0,1)
-
-                if self.LastImg == 2:
-                    self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
-                    self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
-                    self.LastImg = 1;
-                elif self.LastImg == 1:
-                    self.pyImageSquare2 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
-                    self.pyImage2 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
-                    self.LastImg = 2;
-                elif self.LastImg == None:                        
-                    self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
-                    self.pyImageSquare1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
-                    self.LastImg = 1;
+                self._AssignPyImage()
                 # Sleep after image is read.
-                #if(timer.GetElapsed().s() <= 1/60):
-                #    print("thread {} sleep".format(self.cameraId))
-                #    timer.Sleep(1/60 - timer.GetElapsed().s())
-                #print("thread {} duration: {}ms".format(self.cameraId, self.timer.GetElapsed().ms()))
-                #self.timer.Reset()
+                if(self.timer.GetElapsed().s() <= 1/30):
+                    self.timer.Sleep((1/30 - self.timer.GetElapsed().s())*0.9)
+            self.timer.Reset()
                 
         self.camera.release()
-        
 
+    def _AssignPyImage(self):
+        if self.cameraName != "rear":
+            if self.LastImg == 2:
+                #self.pyImage1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
+                self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+                self.LastImg = 1;
+            elif self.LastImg == 1:
+                #self.pyImage2 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))
+                self.pyImage2 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+                self.LastImg = 2;
+            elif self.LastImg == None:
+                #self.pyImage1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (375, 375)))                        
+                self.pyImage1 = Image((0,0), img=pygame.surfarray.make_surface(self.cvImage))
+                self.LastImg = 1;
+        elif self.cameraName == "rear":
+            if self.LastImg == 2:
+                self.pyImage1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (420, 270)))
+                self.LastImg = 1;
+            elif self.LastImg == 1:
+                self.pyImage2 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (420, 270)))
+                self.LastImg = 2;
+            elif self.LastImg == None:                        
+                self.pyImage1 = Image((0,0), img=pygame.transform.scale(pygame.surfarray.make_surface(self.cvImage), (420, 270)))
+                self.LastImg = 1;
+        
     def GetPyImage(self):
+        if not self._init:
+            return None
         if self.LastImg == 1:
             return self.pyImage1
         elif self.LastImg == 2: 
             return self.pyImage2
         elif self.LastImg == None:
             return None
-    
-    def GetSquarePyImage(self):
-        if self.LastImg == 1:
-            return self.pyImageSquare1
-        elif self.LastImg == 2: 
-            return self.pyImageSquare2
-        elif self.LastImg == None:
-            return None
-
 
     def Kill(self):
         self._kill = True
-
-# class camThread(threading.Thread):
-#     def __init__(self, previewName, camID):
-#         threading.Thread.__init__(self)
-#         self.previewName = previewName
-#         self.camID = camID
-#     def run(self):
-#         print("Starting " + self.previewName)
-#         camPreview(self.previewName, self.camID)
-
-# def camPreview(previewName, camID):
-#     cv2.namedWindow(previewName)
-#     cam = cv2.VideoCapture(camID)
-#     if cam.isOpened():
-#         rval, frame = cam.read()
-#     else:
-#         rval = False
-
-#     while rval:
-#         cv2.imshow(previewName, frame)
-#         rval, frame = cam.read()
-#         key = cv2.waitKey(20)
-#         if key == 27:  # exit on ESC
-#             break
-#     cv2.destroyWindow(previewName)
-
-# # Create threads as follows
-# thread1 = camThread("Camera 1", 0)
-# thread2 = camThread("Camera 2", 1)
-# thread3 = camThread("Camera 3", 2)
-
-# thread1.start()
-# thread2.start()
-# thread3.start()
-# print()
-# print("Active threads", threading.activeCount())
