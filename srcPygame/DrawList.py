@@ -25,6 +25,11 @@ SPEEDRING_IMG_SRC       = "resources/images/speedring.png"
 RPMRING_IMG_SRC         = "resources/images/rpmring.png"
 FUELLINE_IMG_SRC        = "resources/images/fuelline.png"
 MASK_IMG_SRC            = "resources/images/mask.png"
+ARROW_LEFT_IMG_SRC      = "resources/images/leftarrow.png"
+ARROW_RIGHT_IMG_SRC     = "resources/images/rightarrow.png"
+
+
+
 
 
 # font sources
@@ -56,6 +61,9 @@ class DrawList():
         self.fuelLine   = Image((490,0), directory=FUELLINE_IMG_SRC)
         self.maskLeft   = Image((88,0), directory=MASK_IMG_SRC)
         self.maskRight  = Image((1280 - 88 - 465,0), directory=MASK_IMG_SRC)
+
+        self.arrowLeft  = Image((0,0), directory=ARROW_LEFT_IMG_SRC)
+        self.arrowRight = Image((0,0), directory=ARROW_RIGHT_IMG_SRC)
 
         self.fuel       = Line(491, 21, 491, 21, 3, color=(255,255,255))
 
@@ -100,7 +108,7 @@ class DrawList():
     def SetToLeftView(self, speed, rpm, fuel, temp):
         self.Clear()
         # image cropping
-        img = self._rearCamera.GetSquarePyImage();
+        img = self._leftCamera.GetSquarePyImage();
         if img != None:
             img.set_x(132)
             img.set_y(12)
@@ -164,6 +172,11 @@ class DrawList():
             img.set_x(1280/2)
             img.set_y(0)
             self._shapes.append(img)
+
+    def AddLeftIndicator(self):
+        self._shapes.append(self.arrowLeft)
+    def AddRightIndicator(self):
+        self._shapes.append(self.arrowRight)
 
     
     def __del__(self):

@@ -1,8 +1,3 @@
-from asyncio import events
-from operator import truediv
-from pickle import FALSE
-import this
-import turtle
 import pygame;
 import sys;
 
@@ -14,7 +9,7 @@ class PygameWindow():
         pygame.init()
         pygame.font.init()
         pygame.mouse.set_visible(False)
-        self._window = pygame.display.set_mode((width, height), pygame.FULLSCREEN)
+        self._window = pygame.display.set_mode((width, height))#, pygame.FULLSCREEN)
         self._window.fill(Constants.DEFAULT_BACKGROUND_COLOUR);
         self._running = True
         pygame.display.flip()

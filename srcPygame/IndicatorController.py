@@ -10,10 +10,10 @@ class IndicatorController():
         self._timer.Reset()
     
     def IsActive(self):
-        if self._timer < (self._period/2):
+        if self._timer.GetElapsed().s() < (self._period/2):
             return True
-        elif self._timer < self._period:
+        elif self._timer.GetElapsed().s() < self._period:
             return False
-        elif self._timer > self._period:
-            self._timer -= self._period*math.floor(self._timer / self._period)
+        elif self._timer.GetElapsed().s() > self._period:
+            self._timer.Reset()
             return self.IsActive();
