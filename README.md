@@ -14,11 +14,11 @@ The project needs the following software installed...
 - pip
 - numpy (pip install numpy)
 - pygame (pip install python-pygame)
-- openCV (pip install python-opencv)<br>
+- openCV (pip install python-opencv)
 The project needs the following hardware avaliable...
 - RPi4 (unsure of previous versions)
 - 3 USB cameras connected
-- Display output (the target device was 1280 x 400)<br>
+- Display output (the target device was 1280 x 400)
 
 ### Team Members
 Willis Medwell [Personal Email](medwellwillis@gmail.com) ([Student Email](102567073@student.swin.edu.au))\
