@@ -8,8 +8,17 @@ The *Racecar DashBoard Display Module* is a unit to replace the car mirrors and 
 - [ ] Side and Back mirror options
 - [ ] Safety Information
 
-### Current Known Issues
-N/A
+### Requirements
+The project needs the following software installed...
+- python3 
+- pip
+- numpy (pip install numpy)
+- pygame (pip install python-pygame)
+- openCV (pip install python-opencv)<br>
+The project needs the following hardware avaliable...
+- RPi4 (unsure of previous versions)
+- 3 USB cameras connected
+- Display output (the target device was 1280 x 400)<br>
 
 ### Team Members
 Willis Medwell [Personal Email](medwellwillis@gmail.com) ([Student Email](102567073@student.swin.edu.au))\
