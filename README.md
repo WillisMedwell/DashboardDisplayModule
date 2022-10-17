@@ -9,22 +9,22 @@ The *Racecar DashBoard Display Module* is a unit to replace the car mirrors and 
 - [ ] Safety Information
 
 ### Requirements
-The project needs the following software installed...
-  update Rpi system
+#### The project needs the following software installed...
+1. update Rpi system
   > sudo apt update
-  python & pip
-  >sudo apt install python
+2.python & pip
+  >sudo apt install python<br>
   >sudo apt install python-pip
-  numpy 
+3. numpy 
   >pip install numpy
-  pygame 
+4. pygame 
   >pip install python-pygame
-  openCV 
-  >pip install python-opencv <br>
-The project needs the following hardware avaliable...
-  RPi4 (unsure of previous versions are compatible)<br>
-  3 USB cameras connected<br>
-  Display output (the target device was 1280 x 400)<br>
+5. openCV 
+  >pip install python-opencv
+#### The project needs the following hardware avaliable...
+1. RPi4 (unsure of previous versions are compatible)
+2. 3 USB cameras connected
+3. Display output (the target device was 1280 x 400)
 
 ### Team Members
 Willis Medwell [Personal Email](medwellwillis@gmail.com) ([Student Email](102567073@student.swin.edu.au))\
