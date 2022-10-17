@@ -33,7 +33,8 @@ Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](1030
 
 ### Versions
 #### 1.06 Design Updates
-Coming soon...
+Daniel Revamped the design to look slick.
+<br><img src="/progress/106.png" height="200" width = "640">
 
 #### 1.05 Image Detection
 Due to the OpenCV library, we were able to integrate machine vision using a trained model (XML).
