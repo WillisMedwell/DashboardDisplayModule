@@ -55,7 +55,7 @@ After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter 
 |-----------|---------|--------|
 | Time (ms) | 24.44   | 40.92  |
 | Freq (Hz) | 4.711   | 212.6  |
-\* From 40 fps to 200 fps (on the target device) was a major and neccessary improvement.
+* From 40 fps to 200 fps (on the target device) was a major and neccessary improvement.
 <img src="/progress/103.gif" height="200" width = "600">
 
 #### 1.02 Tkinter in Realtime
