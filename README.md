@@ -41,7 +41,7 @@ Due to the OpenCV library, we were able to integrate machine vision using a trai
 <br><img src="/progress/105.gif" height="200" width = "640">
 
 #### 1.04 OpenCV Camera
-Camera Support! Each camera runs on their own thread and each image is read from alternating buffers for thread safety.<br>
+Camera Support! Each camera runs on their own thread and each image is read from alternating buffers for thread safety.
 This works out perfectly as we need support for 3 cameras and the RPi4 has 4 cores... (3 camera threads and 1 main thread).
 <br><img src="/progress/104.gif" height="200" width = "640">
 #### 1.03 Pygame Demo
@@ -55,7 +55,7 @@ After poor performance on the Raspberry Pi, Willis changed the GUI from Tkinter 
 |-----------|---------|--------|
 | Time (ms) | 24.44   | 40.92  |
 | Freq (Hz) | 4.711   | 212.6  |
-* From 40 fps to 200 fps (on the target device) was a major and neccessary improvement.
+\* From 40 fps to 200 fps (on the target device) was a major and neccessary improvement.
 <img src="/progress/103.gif" height="200" width = "600">
 
 #### 1.02 Tkinter in Realtime
