@@ -34,7 +34,7 @@ Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](1030
 ### Versions
 #### 1.07 Design Updates
 Final result on RPi4
-<br><img src="/progress/107.jpg" height="200" width = "640">
+<br><img src="/progress/107.jpg" height="480" width = "640">
 
 #### 1.06 Design Updates
 Daniel Revamped the design to look slick.
