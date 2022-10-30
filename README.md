@@ -32,6 +32,10 @@ Daniel Failla [Personal Email](danielfailla4@gmail.com) ([Student Email](1031915
 Giacomo Fantin [Personal Email](giacomofantin00@gmail.com) ([Student Email](103072015@student.swin.edu.au))
 
 ### Versions
+#### 1.07 Design Updates
+Final result on RPi4
+<br><img src="/progress/107.jpg" height="200" width = "640">
+
 #### 1.06 Design Updates
 Daniel Revamped the design to look slick.
 <br><img src="/progress/106.png" height="200" width = "640">

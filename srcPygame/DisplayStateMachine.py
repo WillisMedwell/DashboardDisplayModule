@@ -2,22 +2,19 @@ from asyncio import constants
 from enum import Enum
 from itertools import count
 import math
-from msilib.schema import Font
 
 from cv2 import circle
 from DrawList import DrawList
 from CameraThread import CameraThread
-from Shapes import Shape, Oval, Image, Line, Text
+from Shapes import *
 from IndicatorController import IndicatorController
 import pygame, sys, os
-
 
 class DashState(Enum):
     DEFAULT = 0
     LEFT_VIEW = 1
     RIGHT_VIEW = 2
     REAR_VIEW = 3
-
 
 class DisplayStateMachine():
     def __init__(self):
@@ -41,7 +38,6 @@ class DisplayStateMachine():
 
     def SetState(self, state):
         self._state = DashState(state)
-
 
     def GetDrawList(self):
         self._drawlist.Clear()
@@ -118,7 +114,3 @@ class DisplayStateMachine():
             self._drivingState = "N"
         elif(state == "P"):
             self._drivingState = "P"
-           
-
-
-

@@ -3,6 +3,7 @@ from CameraThread import CameraThread
 import pygame
 import math
 from datetime import datetime
+from gpiozero import CPUTemperature
 
 # Math
 PI = 3.141592654
@@ -25,9 +26,11 @@ FUELLINE_IMG_SRC        = "../resources/images/fuelline.png"
 MASK_IMG_SRC            = "../resources/images/mask.png"
 ARROW_LEFT_IMG_SRC      = "../resources/images/leftarrow.png"
 ARROW_RIGHT_IMG_SRC     = "../resources/images/rightarrow.png"
-STREAK_IMG_SRC          = "../resources/images/Streaks.png"
+STREAK_IMG_SRC          = "../resources/images/streaks.png"
 REAR_OVERLAY_IMG_SRC    = "../resources/images/reverseoverlay.png"
 SQAURE_IMG_SRC          = "../resources/images/square.png"
+BLACKREAR_IMG_SRC       = "../resources/images/black420x270.png"
+
 # font sources
 FONT_DEFAULT            = "../resources/fonts/NotoSansJP.otf"
 
@@ -54,6 +57,7 @@ class DrawList():
         self.KmRemaining = Text(1150, 355, "Km", self.fontSmall, color=(255,255,255))
         self.systemtime  = Text(612, 75, str(datetime.now()), self.fontSmall, color=(255,255,255))
         self.drivingState= Text(625, 20, "P", self.fontMedium, color=(255,255,255))
+        self.RPi4TempText= Text(10,10, "loading...", self.fontSmall)
 
         # masks, backgrounds and other images
         self.speedRing   = Image((50,12),           directory=SPEEDRING_IMG_SRC)
@@ -70,10 +74,14 @@ class DrawList():
         self.engine      = Image((600, 112),        directory=ENGINE_WARNING_IMG_SRC)
         self.handbrake   = Image((650, 112),        directory=HANDBRAKE_IMG_SRC)
         self.square      = Image((616, 25),         directory=SQAURE_IMG_SRC)
+        self.blackrear   = Image((430, 110),        directory=BLACKREAR_IMG_SRC)
 
         # dynamically adjusted lines
-        self.fuel       = Line(490-4, 360, 490-4, 360, 21, color=pygame.Color(200,200,200))
-        self.topLinebar = Line(450, 105, 830, 105, 2, color=pygame.Color(255,255,255))
+        self.fuel       = Line(490-4, 360, 490-4, 360, 21, color=(200,200,200))
+        self.topLinebar = Line(450, 105, 830, 105, 2, color=(255,255,255))
+
+        # RPI monitors
+        self.RPi4Temp  = CPUTemperature()
 
     def Add(self, shapes):
         if isinstance(shapes, list):
@@ -84,6 +92,8 @@ class DrawList():
     
     def Clear(self):
         self._shapes = []
+        self.RPi4TempText._text = str(self.RPi4Temp.temperature)
+        self._shapes.append(self.RPi4TempText)
 
     def SetToDefault(self, speed, rpm, fuel, temp, state):
         self.Clear()
@@ -118,7 +128,7 @@ class DrawList():
         self._rearCamera.active = False
         self._leftCamera.active = False
 
-        img = self._rearCamera.GetPyImage();
+        img = self._rightCamera.GetPyImage();
         if img != None:
             img.set_x(1280-132-375+82)
             img.set_y(12)
@@ -136,16 +146,18 @@ class DrawList():
         self._leftCamera.active = False
         self._rightCamera.active = False
 
+        # everything else
+        self._AppendSpeedometer(speed)
+        self._AppendRevmeter(rpm)
+
         img = self._rearCamera.GetPyImage();
         if img != None:
             img.set_x((1280/2) - (img.width/2))
             img.set_y(400 - img.height - 20)
             self._shapes.append(img)
+        else:
+            self._shapes.append(self.blackrear)
         self._shapes.append(self.rearoverlay)
-
-        # everything else
-        self._AppendSpeedometer(speed)
-        self._AppendRevmeter(rpm)
 
     def AddLeftIndicator(self):
         self._shapes.append(self.arrowLeft)
@@ -172,7 +184,7 @@ class DrawList():
         # rpm ring background
         self._shapes.append(self.rpmRing)
         # rpm needle
-        self._shapes.append(GetNeedle(0, 210, 6, -30, rpm, (1280 - 320 + 82, 200), 180))
+        self._shapes.append(GetNeedle(0, 210, 6, -30, rpm, (1280 - 320 + 75, 200), 180))
 
     def _AppendCenterSummary(self, speed, temp, fuel, state):
         # speed text

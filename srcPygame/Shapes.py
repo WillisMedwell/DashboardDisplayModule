@@ -235,7 +235,7 @@ class Line(Shape):
         super().__init__(color=color)
 
     def draw(self, window):
-        pygame.draw.line(window.GetSurface(), self.color, (self.x1, self.y1), (self.x2, self.y2), width=self.lineThicknes)
+        pygame.draw.line(window.GetSurface(), self.color, (self.x1, self.y1), (self.x2, self.y2), self.lineThicknes)
 
 class Text(Shape):
     def __init__(self, x1, y1, text, font, color = "white"):
